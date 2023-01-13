@@ -20,3 +20,20 @@ Travail à faire :
 -> Réaliser des graphiques sur les pays qui achètent le plus et sur ce qu'ils achètent le plus.
 -> Essayer de mettre en avant des groupes de produits commandés simultanément.
 -> Essayer de relier les produits avec une date précise du calendrier.
+
+
+Ce qu'on dit au client :
+  -> Création d'un site web pour lui montrer les graphiques.
+  -> Création des différentes fonctionnalités pour lui montrer les graphiques.
+
+
+
+
+    prendre en compte les produits qui ont était retournés
+
+
+Suite à la réunion avec le client, nous avons décidé de faire un site web qui permettrait de visualiser les données de  l'entreprise.
+Nous avons décidé de faire un site web qui permettrait de visualiser les données de  l'entreprise.
+En particuler, les varations d'un produit ou d'un client.
+Ainsi qu'avoir le taux de retour d'un produit ou d'un client.
+Nous voulons aussi avoir 
