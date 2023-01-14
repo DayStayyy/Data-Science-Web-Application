@@ -1,7 +1,13 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-
+type = {
+    'Description': 1,
+    'Quantity': 2,
+    'CustomerID': 3,
+    'Country': 4
+}
 
 class DataEngine(object):
     def __init__(self, path):
@@ -17,6 +23,7 @@ class DataEngine(object):
         products = self.df[self.df['Quantity'] < 0].groupby('Description').sum(numeric_only=False)['Quantity']
         products = products.sort_values(ascending=True)
         return products.head(n)
+
 
     def find_best_customers(self, n=10):
         customers = self.df.groupby('CustomerID').sum(numeric_only=False)['Quantity']
