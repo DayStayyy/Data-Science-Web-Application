@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/woocommerce-layout.css') }}">
-</head>
-<script src="{{url_for('static', filename='js/.js')}}"></script>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='css/table.css') }}"
+    />
+  </head>
+  <body>
+    <table id="result"></table>
+  </body>
+  <script src="{{url_for('static', filename='js/callFunction.js')}}"></script>
+</html>

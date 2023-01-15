@@ -15,57 +15,58 @@ engine = DataEngine('data.csv')
 @app.route('/api/best_selling_products', methods=['GET', 'POST'])
 def best_selling_products():
     # Get the number of products to return
-    n = request.args.get('n', default=10, type=int)
+    number = request.args.get('number', default=10, type=int)
     # Get the best selling products
-    products = engine.find_best_selling_products(n)
+    products = engine.find_best_selling_products(number)
     # Return the results as a json object
     return jsonify(products.to_dict())
 
 @app.route('/api/most_returned_products', methods=['GET', 'POST'])
 def most_returned_products():
     # Get the number of products to return
-    n = request.args.get('n', default=10, type=int)
+    number = request.args.get('number', default=10, type=int)
     # Get the most returned products
-    products = engine.find_most_returned_products(n)
-    # Return the results as a json object
+    products = engine.find_most_returned_products(number)
+    # transform the results into a json array
     return jsonify(products.to_dict())
+
 
 @app.route('/api/best_customers', methods=['GET', 'POST'])
 def best_customers():
     # Get the number of customers to return
-    n = request.args.get('n', default=10, type=int)
+    number = request.args.get('number', default=10, type=int)
     # Get the best customers
-    customers = engine.find_best_customers(n)
+    customers = engine.find_best_customers(number)
     # Return the results as a json object
     return jsonify(customers.to_dict())
 
 @app.route('/api/most_returned_customers', methods=['GET', 'POST'])
 def most_returned_customers():
     # Get the number of customers to return
-    n = request.args.get('n', default=10, type=int)
+    number = request.args.get('number', default=10, type=int)
     # Get the best customers
-    customers = engine.find_most_returned_customers(n)
+    customers = engine.find_most_returned_customers(number)
     # Return the results as a json object
     return jsonify(customers.to_dict())
 
 @app.route('/api/best_selling_products_by_country', methods=['GET', 'POST'])
 def best_selling_products_by_country():
     # Get the number of customers to return
-    n = request.args.get('n', default=10, type=int)
+    number = request.args.get('number', default=10, type=int)
     # Get the best customers
-    customers = engine.find_best_selling_products_by_country(n)
+    customers = engine.find_best_selling_products_by_country(number)
     # Return the results as a json object
-    return jsonify(customers.to_dict())
+    return jsonify(customers)
 
 @app.route('/api/similar_products_countries', methods=['GET', 'POST'])
 def similar_products_countries():
     # Get the number of customers to return
-    n = request.args.get('n', default=10, type=int)
+    number = request.args.get('number', default=10, type=int)
     # Get the best customers
-    customers = engine.find_similar_products_countries(n)
+    customers = engine.find_similar_products_countries(number)
     # Return the results as a json object
-    return jsonify(customers.to_dict())
+    return jsonify(customers)
 
-@app.route('/index', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
