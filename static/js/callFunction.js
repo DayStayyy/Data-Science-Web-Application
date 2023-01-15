@@ -37,7 +37,11 @@ function display_table(data, first_column_name, second_column_name, table_id) {
     td.appendChild(document.createTextNode(i));
     tr.appendChild(td);
     td = document.createElement("td");
-    td.appendChild(document.createTextNode(Math.abs(val)));
+    if (table_id == "result_variation") {
+      td.appendChild(document.createTextNode(parseInt(val) + "%"));
+    } else {
+      td.appendChild(document.createTextNode(val));
+    }
     tr.appendChild(td);
     table.appendChild(tr);
   }
@@ -208,7 +212,7 @@ function create_button_product_with_biggest_variation(div) {
     var end_date = document.getElementById("end_date").value;
     var start_date2 = document.getElementById("start_date2").value;
     var end_date2 = document.getElementById("end_date2").value;
-    var number = document.getElementById("number").value;
+    var number = document.getElementById("number_variation").value;
     var ascending = document.getElementById("ascending").value;
     call_function_product_with_biggest_variation(
       start_date,
@@ -226,7 +230,7 @@ function create_button_product_with_biggest_variation(div) {
 function create_input_number_product_with_biggest_variation(div) {
   var input = document.createElement("input");
   input.type = "text";
-  input.id = "number";
+  input.id = "number_variation";
   input.placeholder = "number of results";
   div.appendChild(input);
 }
@@ -237,6 +241,22 @@ function create_input_date_product_with_biggest_variation(div, id) {
   var input = document.createElement("input");
   input.type = "date";
   input.id = id;
+  // giv default value
+  switch (id) {
+    case "start_date":
+      input.value = "2010-01-01";
+      break;
+    case "end_date":
+      input.value = "2010-12-31";
+      break;
+    case "start_date2":
+      input.value = "2011-01-01";
+      break;
+    case "end_date2":
+      input.value = "2011-12-31";
+      break;
+  }
+
   div.appendChild(input);
 }
 
@@ -245,12 +265,12 @@ function create_select_ascending_product_with_biggest_variation(div) {
   var select = document.createElement("select");
   select.id = "ascending";
   var option = document.createElement("option");
-  option.value = "true";
-  option.text = "true";
+  option.value = 1;
+  option.text = "Worst to best";
   select.appendChild(option);
   var option = document.createElement("option");
-  option.value = "false";
-  option.text = "false";
+  option.value = 0;
+  option.text = "Best to worst";
   select.appendChild(option);
   div.appendChild(select);
 }
@@ -267,6 +287,18 @@ function create_result_table_variation() {
   main.appendChild(div);
 }
 
+function create_result_table_variation_sidebar() {
+  var div = document.createElement("div");
+  div.className = "table-wrapper";
+  var table = document.createElement("table");
+  table.id = "result_variation";
+  table.className = "fl-table";
+  div.appendChild(table);
+  // get right div
+  var main = document.getElementById("sidebar");
+  main.appendChild(div);
+}
+
 function create_function_selectors_product_with_biggest_variation() {
   var main = document.getElementById("main");
   var div = document.createElement("div");
@@ -278,36 +310,27 @@ function create_function_selectors_product_with_biggest_variation() {
   create_input_number_product_with_biggest_variation(div);
   create_select_ascending_product_with_biggest_variation(div);
   create_button_product_with_biggest_variation(div);
-
   main.appendChild(div);
+  create_result_table_variation();
 }
 
 create_function_selectors_product_with_biggest_variation();
 
-// create_result_table_variation();
-// function display_table_variation(data) {
-//   // clear result div
-//   var table = document.getElementById("result_variation");
-//   table.innerHTML = "";
-//   var tr = document.createElement("tr");
-//   var th = document.createElement("th");
-//   th.appendChild(document.createTextNode(first_column_name));
-//   tr.appendChild(th);
-//   th = document.createElement("th");
-//   th.appendChild(document.createTextNode(second_column_name));
-//   tr.appendChild(th);
-//   table.appendChild(tr);
-//   data = Object.values(data);
-//   product_name = Object.values(data[0]);
-//   varations = Object.values(data[1]);
-//   // for (const name of Object.values(data[0])) {
-//   //   var tr = document.createElement("tr");
-//   //   var td = document.createElement("td");
-//   //   td.appendChild(document.createTextNode(i));
-//   //   tr.appendChild(td);
-//   //   td = document.createElement("td");
-//   //   td.appendChild(document.createTextNode(Math.abs(val)));
-//   //   tr.appendChild(td);
-//   //   table.appendChild(tr);
-//   // }
-// }
+function create_function_selectors_product_with_biggest_variation_sidebar() {
+  var main = document.getElementById("sidebar");
+  var div = document.createElement("div");
+  div.className = "function_selectors";
+  main.appendChild(div);
+  create_result_table_variation_sidebar();
+
+  call_function_product_with_biggest_variation(
+    "2010-01-01",
+    "2010-12-31",
+    "2011-01-01",
+    "2011-12-31",
+    10,
+    1
+  );
+}
+
+// create_function_selectors_product_with_biggest_variation_sidebar();

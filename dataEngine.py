@@ -67,11 +67,13 @@ class DataEngine(object):
         return similar_countries
 
     def find_product_with_biggest_variation(self, start_date, end_date, start_date2, end_date2, number = 10, ascending = False):
+            start_date = pd.to_datetime(start_date)
+            end_date = pd.to_datetime(end_date)
+            start_date2 = pd.to_datetime(start_date2)
+            end_date2 = pd.to_datetime(end_date2)
             # Filter the dataframe to only include the products that were sold in the given time period
-            df1 = self.df[(self.df['InvoiceDate'] >= start_date) & (self.df['InvoiceDate'] <= end_date)]
-            df2 = self.df[(self.df['InvoiceDate'] >= start_date2) & (self.df['InvoiceDate'] <= end_date2)]
-            print(df1)
-            print(df2)
+            df1 = self.df[(pd.to_datetime(self.df['InvoiceDate']) >= start_date) & (pd.to_datetime(self.df['InvoiceDate']) <= end_date)]
+            df2 = self.df[(pd.to_datetime(self.df['InvoiceDate']) >= start_date2) & (pd.to_datetime(self.df['InvoiceDate']) <= end_date2)]
             df1 = df1[df1['Quantity'] > 0]
             df2 = df2[df2['Quantity'] > 0]
             df1 = df1.groupby('Description')[['Quantity']].sum(numeric_only=False).reset_index()
@@ -86,12 +88,16 @@ class DataEngine(object):
             df = df.dropna()
             # delete the columns that are not needed , Quantity_x and Quantity_y
             df = df.drop(['Quantity_x', 'Quantity_y'], axis=1)
+            # sort the dataframe by variation in ascending order
+            df = df.sort_values(by=['Variation'],ascending=ascending)
             # return as a dict 
             dict = {}
-            print(df)
-            for i in range(number):
-                    dict[df.iloc[i,0]] = df.iloc[i,1]
+            for _, row in df.iterrows():
+                dict[row['Description']] = row['Variation']
+                if len(dict) == number:
+                    break
             return dict
+            
 
     
 

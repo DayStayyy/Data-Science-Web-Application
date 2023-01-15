@@ -79,7 +79,10 @@ def product_with_biggest_variation():
     # Get the number of customers to return
     number = request.args.get('number', default=10, type=int)
     # other parameters is ascending, start_date, end_date, start_date2, end_date2
-    ascending = request.args.get('ascending', default=True, type=bool)
+    ascending = request.args.get('ascending', default=True, type=int)
+    print(ascending)
+    ascending = bool(ascending)
+    print(ascending)
     start_date = request.args.get('start_date', default='2010-12-01', type=str)
     end_date = request.args.get('end_date', default='2011-12-09', type=str)
     start_date2 = request.args.get('start_date2', default='2011-12-01', type=str)
@@ -87,7 +90,8 @@ def product_with_biggest_variation():
     # Get the best customers
     products = engine.find_product_with_biggest_variation(start_date, end_date, start_date2, end_date2, number=number, ascending=ascending)
     # Return the results as a json object
-    return jsonify(products)
+    return json.dumps(products)
+
 
 
 @app.route('/', methods=['GET', 'POST'])
