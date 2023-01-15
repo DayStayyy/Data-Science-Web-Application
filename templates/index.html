@@ -8,9 +8,24 @@
       type="text/css"
       href="{{ url_for('static',filename='css/table.css') }}"
     />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='css/sidebar.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='css/dateSelector.css') }}"
+    />
   </head>
   <body>
-    <table id="result"></table>
+    <!-- div left -->
+    <div class="sidenav" id="left"></div>
+    <!-- div right -->
+    <div class="main" id="main">
+      <table></table>
+    </div>
   </body>
   <script src="{{url_for('static', filename='js/callFunction.js')}}"></script>
 </html>

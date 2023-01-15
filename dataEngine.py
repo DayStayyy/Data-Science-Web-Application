@@ -14,51 +14,51 @@ class DataEngine(object):
         self.df = pd.read_csv(path, encoding='ISO-8859-1')
 
 
-    def find_best_selling_products(self, n=10):
+    def find_best_selling_products(self, number=10):
         products = self.df.groupby('Description').sum(numeric_only=False)['Quantity']
         products = products.sort_values(ascending=False)
-        return products.head(n)
+        return products.head(number)
 
-    def find_most_returned_products(self, n=10):
+    def find_most_returned_products(self, number=10):
         products = self.df[self.df['Quantity'] < 0].groupby('Description').sum(numeric_only=False)['Quantity']
         products = products.sort_values(ascending=True)
-        return products.head(n)
+        return products.head(number)
 
 
-    def find_best_customers(self, n=10):
+    def find_best_customers(self, number=10):
         customers = self.df.groupby('CustomerID').sum(numeric_only=False)['Quantity']
         customers = customers.sort_values(ascending=False)
-        return customers.head(n)
+        return customers.head(number)
 
-    def find_most_returned_customers(self, n=10):
+    def find_most_returned_customers(self, number=10):
         customers = self.df[self.df['Quantity'] < 0].groupby('CustomerID').sum(numeric_only=False)['Quantity']
         customers = customers.sort_values(ascending=True)
-        return customers.head(n)
+        return customers.head(number)
 
-    def find_best_selling_products_by_country(self, n=10):
+    def find_best_selling_products_by_country(self, number=10):
         # Only get rows where quantity is greater than zero (to ignore returns)
         df = self.df[self.df['Quantity'] > 0]
         countries_products = df.groupby(['Country','Description']).sum(numeric_only=False).reset_index()
         countries_products = countries_products.sort_values(by=['Country','Quantity'],ascending=[True,False])
         products_by_country = {}
         for country, df_country in countries_products.groupby('Country'):
-            products = df_country.head(n)["Description"].tolist()
+            products = df_country.head(number)["Description"].tolist()
             products_by_country[country] = products
         return products_by_country
 
-    def find_similar_products_countries(self, n=10):
-        # Create a df with the top n products in the United Kingdom
+    def find_similar_products_countries(self, number=10):
+        # Create a df with the top number products in the United Kingdom
         df_uk = self.df[self.df['Country'] == 'United Kingdom']
-        uk_products = df_uk.groupby('Description').sum(numeric_only=False).nlargest(n, 'Quantity')
+        uk_products = df_uk.groupby('Description').sum(numeric_only=False).nlargest(number, 'Quantity')
         uk_products = uk_products.index.tolist()
 
-        # Group the original df by country and get the top n products for each country
+        # Group the original df by country and get the top number products for each country
         countries_products = self.df.groupby(['Country','Description']).sum(numeric_only=False).reset_index()
         countries_products = countries_products.sort_values(by=['Country','Quantity'],ascending=[True,False])
-        countries_products = countries_products.groupby('Country').head(n)
+        countries_products = countries_products.groupby('Country').head(number)
         similar_countries = {}
 
-        # Iterate over the countries and compare the top n products to the UK products
+        # Iterate over the countries and compare the top number products to the UK products
         for country, df_country in countries_products.groupby('Country'):
             country_products = df_country['Description'].tolist()
             common_products = set(country_products).intersection(uk_products)
@@ -66,6 +66,34 @@ class DataEngine(object):
                 similar_countries[country] = common_products
         return similar_countries
 
+    def find_product_with_biggest_variation(self, start_date, end_date, start_date2, end_date2, number = 10, ascending = False):
+            # Filter the dataframe to only include the products that were sold in the given time period
+            df1 = self.df[(self.df['InvoiceDate'] >= start_date) & (self.df['InvoiceDate'] <= end_date)]
+            df2 = self.df[(self.df['InvoiceDate'] >= start_date2) & (self.df['InvoiceDate'] <= end_date2)]
+            print(df1)
+            print(df2)
+            df1 = df1[df1['Quantity'] > 0]
+            df2 = df2[df2['Quantity'] > 0]
+            df1 = df1.groupby('Description')[['Quantity']].sum(numeric_only=False).reset_index()
+            df2 = df2.groupby('Description')[['Quantity']].sum(numeric_only=False).reset_index()
+            # calculate total quantity sold for each product
+            df1 = df1.sort_values(by=['Quantity'],ascending=ascending)
+            df2 = df2.sort_values(by=['Quantity'],ascending=ascending)
+            # calculate the variation between the two time periods for each product in percentage
+            df = pd.merge(df1, df2, on='Description', how='outer')
+            df['Variation'] = (df['Quantity_y'] - df['Quantity_x']) / df['Quantity_x'] * 100
+            df = df.sort_values(by=['Variation'],ascending=ascending)
+            df = df.dropna()
+            # delete the columns that are not needed , Quantity_x and Quantity_y
+            df = df.drop(['Quantity_x', 'Quantity_y'], axis=1)
+            # return as a dict 
+            dict = {}
+            print(df)
+            for i in range(number):
+                    dict[df.iloc[i,0]] = df.iloc[i,1]
+            return dict
+
+    
 
     # ============= Modelisation ================ #
 
@@ -83,3 +111,5 @@ class DataEngine(object):
         plt.ylabel('Product')
         plt.title('Top 10 Returned Products')
         return plt
+    
+    
