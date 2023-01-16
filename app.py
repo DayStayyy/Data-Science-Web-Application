@@ -1,3 +1,4 @@
+import argparse
 import json
 from flask import Flask, render_template, redirect, url_for, request, jsonify, session, make_response,send_file
 import pandas as pd
@@ -5,14 +6,23 @@ from dataEngine import DataEngine
 
 #python -m flask run --host=0.0.0.0
 
+# we call the file with python3 demo.py --data=DATA_PATH
+# get the data path
+# parser = argparse.ArgumentParser()
+# parser.add_argument('--data', type=str, default='data.csv')
+# args = parser.parse_args()
+# data_path = args.data
+data_path = 'data.csv'
+
 app = Flask(__name__)
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
 
 
-engine = DataEngine('data.csv')
+engine = DataEngine(data_path)
 
 @app.route('/api/best_selling_products', methods=['GET', 'POST'])
 def best_selling_products():
@@ -87,8 +97,12 @@ def product_with_biggest_variation():
     end_date = request.args.get('end_date', default='2011-12-09', type=str)
     start_date2 = request.args.get('start_date2', default='2011-12-01', type=str)
     end_date2 = request.args.get('end_date2', default='2011-12-09', type=str)
+    pourcentage = request.args.get('pourcentage', default=0, type=int)
+    pourcentage = bool(pourcentage)
+    type = request.args.get('type', default='product', type=str)
+
     # Get the best customers
-    products = engine.find_product_with_biggest_variation(start_date, end_date, start_date2, end_date2, number=number, ascending=ascending)
+    products = engine.find_product_customer_with_biggest_variation(start_date, end_date, start_date2, end_date2, number=number, ascending=ascending, type=type, pourcentage=pourcentage)
     # Return the results as a json object
     return json.dumps(products)
 
