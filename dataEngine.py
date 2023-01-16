@@ -1,4 +1,6 @@
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -12,7 +14,50 @@ type = {
 class DataEngine(object):
     def __init__(self, path):
         self.df = pd.read_csv(path, encoding='ISO-8859-1')
+        self.fill_na_description()
+        self.fill_none_description()
+        self.clean_dates()
+        self.convert_float_to_int()
+        self.remove_non_uppercase_description()
+        self.reset_index_and_save('to_csv.csv')
+        self.df = pd.read_csv('to_csv.csv', encoding='ISO-8859-1')
 
+
+    # Clean the data
+    def fill_na_description(self):
+        most_common_description_by_stockcode = self.df.groupby("StockCode")["Description"].first()
+        self.df["Description"].fillna(self.df["StockCode"].map(most_common_description_by_stockcode), inplace=True)
+        return self.df.head()
+
+    def fill_none_description(self):
+        most_common_description_by_stockcode = self.df.groupby("StockCode")["Description"].apply(lambda x:x.value_counts().idxmax() if x.count() else None)
+        most_common_description_by_stockcode.fillna('', inplace = True)
+        self.df["Description"].fillna(self.df["StockCode"].map(most_common_description_by_stockcode), inplace=True)
+        return self.df.head()
+
+    def clean_dates(self):
+        # convert "InvoiceDate" column to datetime
+        self.df["InvoiceDate"] = pd.to_datetime(self.df["InvoiceDate"])
+
+        # extract date only
+        self.df["InvoiceDate"] = self.df["InvoiceDate"].dt.date
+        return self.df.head()
+        
+    def convert_float_to_int(self):
+        self.df["CustomerID"] = self.df["CustomerID"].fillna(-1)
+        self.df["CustomerID"] = self.df["CustomerID"].astype(int)
+        return self.df.head()
+    # Remove "?", "damaged", "check", etc.
+    def remove_non_uppercase_description(self):
+        self.df.drop(self.df[~self.df['Description'].str.isupper()].index, inplace = True)
+        return self.df.head()
+
+    def reset_index_and_save(self, file_path):
+        self.df.reset_index(drop=True, inplace=True)
+        self.df.to_csv(file_path, index=False)
+
+
+    # Backend functions
 
     def find_best_selling_products(self, number=10):
         products = self.df.groupby('Description').sum(numeric_only=False)['Quantity']
@@ -66,7 +111,7 @@ class DataEngine(object):
                 similar_countries[country] = common_products
         return similar_countries
 
-    def find_product_with_biggest_variation(self, start_date, end_date, start_date2, end_date2, number = 10, ascending = False, type='Description'):
+    def find_product_customer_with_biggest_variation(self, start_date, end_date, start_date2, end_date2, number = 10, ascending = False, type='Description', pourcentage = False):
             start_date = pd.to_datetime(start_date)
             end_date = pd.to_datetime(end_date)
             start_date2 = pd.to_datetime(start_date2)
@@ -76,14 +121,17 @@ class DataEngine(object):
             df2 = self.df[(pd.to_datetime(self.df['InvoiceDate']) >= start_date2) & (pd.to_datetime(self.df['InvoiceDate']) <= end_date2)]
             df1 = df1[df1['Quantity'] > 0]
             df2 = df2[df2['Quantity'] > 0]
-            df1 = df1.groupby('Description')[['Quantity']].sum(numeric_only=False).reset_index()
-            df2 = df2.groupby('Description')[['Quantity']].sum(numeric_only=False).reset_index()
+            df1 = df1.groupby(type)[['Quantity']].sum(numeric_only=False).reset_index()
+            df2 = df2.groupby(type)[['Quantity']].sum(numeric_only=False).reset_index()
             # calculate total quantity sold for each product
             df1 = df1.sort_values(by=['Quantity'],ascending=ascending)
             df2 = df2.sort_values(by=['Quantity'],ascending=ascending)
             # calculate the variation between the two time periods for each product in percentage
-            df = pd.merge(df1, df2, on='Description', how='outer')
-            df['Variation'] = (df['Quantity_y'] - df['Quantity_x']) / df['Quantity_x'] * 100
+            df = pd.merge(df1, df2, on=type, how='outer')
+            if pourcentage == True:
+                df['Variation'] = (df['Quantity_y'] - df['Quantity_x']) / df['Quantity_x'] * 100
+            else:
+                df['Variation'] = df['Quantity_y'] - df['Quantity_x']
             df = df.sort_values(by=['Variation'],ascending=ascending)
             df = df.dropna()
             # delete the columns that are not needed , Quantity_x and Quantity_y
@@ -93,7 +141,7 @@ class DataEngine(object):
             # return as a dict 
             dict = {}
             for _, row in df.iterrows():
-                dict[row['Description']] = row['Variation']
+                dict[row[type]] = row['Variation']
                 if len(dict) == number:
                     break
             return dict
@@ -160,10 +208,10 @@ class DataEngine(object):
             products = products.sort_values(ascending=False)
             # Plot the top 10 products
             products.iloc[:10][:10].plot(kind='bar')
-            # plt.xlabel('Product')
-            # plt.ylabel('Quantity Sold')
-            # plt.title('Top 10 Sold Products in {}'.format(country))
-            # plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
+            plt.xlabel('Product')
+            plt.ylabel('Quantity Sold')
+            plt.title('Top 10 Sold Products in {}'.format(country))
+            plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
 
     def plot_customer_purchases_in_period(self, customer_id, start_date, end_date, id, product_name=None):
         # Filter dataframe by customer ID

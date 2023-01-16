@@ -307,6 +307,21 @@ function create_result_table_variation_sidebar() {
   main.appendChild(div);
 }
 
+// create select for type
+function create_select_ascending_product_with_biggest_variation(div) {
+  var select = document.createElement("select");
+  select.id = "type";
+  var option = document.createElement("option");
+  option.value = "CustomerID";
+  option.text = "Customer";
+  select.appendChild(option);
+  var option = document.createElement("option");
+  option.value = "Description";
+  option.text = "Product";
+  select.appendChild(option);
+  div.appendChild(select);
+}
+
 function create_function_selectors_product_with_biggest_variation() {
   var main = document.getElementById("main");
   var div = document.createElement("div");
@@ -399,4 +414,4 @@ function create_button_modelisation() {
 
 create_button_modelisation();
 
-// display_modelisation(10, "plot_top_customers");
+display_modelisation(10, "plot_top_customers");
