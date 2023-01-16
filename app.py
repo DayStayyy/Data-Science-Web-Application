@@ -14,7 +14,6 @@ app.config["SECRET_KEY"] = '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d
 
 engine = DataEngine('data.csv')
 
-
 @app.route('/api/best_selling_products', methods=['GET', 'POST'])
 def best_selling_products():
     # Get the number of products to return
@@ -37,6 +36,7 @@ def most_returned_products():
 
 @app.route('/api/best_customers', methods=['GET', 'POST'])
 def best_customers():
+    print("YO")
     # Get the number of customers to return
     number = request.args.get('number', default=10, type=int)
     # Get the best customers
@@ -62,7 +62,7 @@ def best_selling_products_by_country():
     # Get the best customers
     products = engine.find_best_selling_products_by_country(number)
     # Return the results as a json object
-    return jsonify(products)
+    return json.dumps(products)
 
 
 @app.route('/api/similar_products_countries', methods=['GET', 'POST'])
@@ -72,7 +72,7 @@ def similar_products_countries():
     # Get the best customers
     products = engine.find_similar_products_countries(number)
     # Return the results as a json object
-    return jsonify(products)
+    return json.dumps(products)
 
 
 # call find_product_with_biggest_variation
@@ -93,18 +93,13 @@ def product_with_biggest_variation():
     return json.dumps(products)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    return render_template('index.html')
-
-
 # Modelisation
 @app.route('/modelisation/plot_top_product', methods=['GET', 'POST'])
 def plot_top_product():
     # Get the number of customers to return
     id = request.args.get('id', default=0, type=int)
     # The fonction create a image in the folder modelisation, the id is the name of the image
-    engine.plot_top_product( id)
+    engine.plot_top_product(id)
     filename = 'modelisation/' + str(id) + '.png'
 
     # Return the image
@@ -154,3 +149,8 @@ def plot_top_returned_products():
 
     # Return the image
     return send_file(filename, mimetype='image/gif')
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
