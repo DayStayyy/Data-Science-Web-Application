@@ -1,6 +1,7 @@
 var array_of_functions_name = [
   "best_selling_products",
   "most_returned_products",
+  "best_customers",
   "most_returned_customers",
 ];
 

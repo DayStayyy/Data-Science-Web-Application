@@ -71,7 +71,7 @@ class DataEngine(object):
 
 
     def find_best_customers(self, number=10):
-        customers = self.df.groupby('CustomerID').sum(numeric_only=False)['Quantity']
+        customers = self.df.groupby('CustomerID')['Quantity'].sum(numeric_only=False)
         customers = customers.sort_values(ascending=False)
         return customers.head(number)
 

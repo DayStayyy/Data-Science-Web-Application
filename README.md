@@ -26,3 +26,6 @@ pip install -r requirements.txt
 ```
 Ensuite, il faut lancer le fichier "app.py"
 ```bash
+python -m flask run
+```
+Le site web est alors accessible à l'adresse "http://127.0.0.1:5000/".
