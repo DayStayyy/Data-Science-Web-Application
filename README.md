@@ -1,39 +1,28 @@
-L'entreprise possède un site de vente en ligne de produits en tous genres.
-Elle ne sait pas comment valoriser les données qu'elle a obtenues après 2 ans d'acquisition.
-Il y a un gros turn over donc personne ne connaît réellement les données qui sont traitées et personne n'a de réelles connaissances.
+# PRESENTATION DU PROJET
 
-Les produits sont achetés puis stockés et ensuite revendus sur leur site. Les clients peuvent être des particuliers ou des magasins.
+Ce projet est un projet de test pour de Math Data Science.
 
-Les données contiennent des erreurs car elles ont connu beaucoup de modifications avant de nous parvenir.
-Les problèmes majeurs de l'entreprise sont lié à leur stockage. 
-Ils ont une mauvaise gestion de leur stockage, il y a parfois trop de produits et parfois pas assez.
+## Objectif 
 
-Ils sont dans une phase compliquée où ils n'arrivent pas à dégager trop de revenu avec leur activité.
+Ce projet a pour objectif de réaliser un site web qui permet de visualiser des données du csv fourni par le client.
+La présentation du projet se trouve dans le "fil_rouge.pdf".
 
-Hypothèse : Faire un algorithme de recommandation lors de la vente de leurs articles.
--> Meilleure gestion de leur stock, pas de perte d'argent lié au manque de stock ou aux produits en surplus.
--> Recommandations aux clients donc plus de vente possible si l'utilisateur est attiré par la recommandation.
+## Description du projet
 
-Travail à faire : 
--> Réaliser des graphiques pour lui montrer les pires produits et les meilleurs produits.
--> Réaliser des graphiques sur les plus gros clients et sur les clients avec le plus de retour.
--> Réaliser des graphiques sur les pays qui achètent le plus et sur ce qu'ils achètent le plus.
--> Essayer de mettre en avant des groupes de produits commandés simultanément.
--> Essayer de relier les produits avec une date précise du calendrier.
+Le projet est composé de différents fichiers et dossiers.
 
+- Le dossier "Notebooks" contient les notebooks utilisés pour le projet.
+- Le dossier "modelisation" contient les image de modélisation réalisées par l'Api.
+- Les dossier "static" et "templates" contiennent les fichiers html, css et js utilisés pour le site web.
+- Le fichier "app.py" est le fichier principal du site web.
+- Le fichier "requirements.txt" contient les librairies utilisées pour le projet.
+- Les fichier .csv sont les fichiers de données utilisés pour le projet.
 
-Ce qu'on dit au client :
-  -> Création d'un site web pour lui montrer les graphiques.
-  -> Création des différentes fonctionnalités pour lui montrer les graphiques.
+## Lancement du projet
 
-
-
-
-    prendre en compte les produits qui ont était retournés
-
-
-Suite à la réunion avec le client, nous avons décidé de faire un site web qui permettrait de visualiser les données de  l'entreprise.
-Nous avons décidé de faire un site web qui permettrait de visualiser les données de  l'entreprise.
-En particuler, les varations d'un produit ou d'un client.
-Ainsi qu'avoir le taux de retour d'un produit ou d'un client.
-Nous voulons aussi avoir 
+Pour lancer le projet, il faut installer les librairies du fichier "requirements.txt"
+```bash
+pip install -r requirements.txt
+```
+Ensuite, il faut lancer le fichier "app.py"
+```bash

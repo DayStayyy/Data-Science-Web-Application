@@ -46,7 +46,6 @@ def most_returned_products():
 
 @app.route('/api/best_customers', methods=['GET', 'POST'])
 def best_customers():
-    print("YO")
     # Get the number of customers to return
     number = request.args.get('number', default=10, type=int)
     # Get the best customers
