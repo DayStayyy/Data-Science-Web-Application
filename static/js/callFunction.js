@@ -25,7 +25,7 @@ async function get_data(number, function_name) {
   return data;
 }
 
-function display_table(data, first_column_name, second_column_name, table_id) {
+function display_table(data, first_column_name, second_column_name, table_id, pourcentage) {
   // clear result div
   var table = document.getElementById(table_id);
   table.innerHTML = "";
@@ -43,7 +43,7 @@ function display_table(data, first_column_name, second_column_name, table_id) {
     td.appendChild(document.createTextNode(i));
     tr.appendChild(td);
     td = document.createElement("td");
-    if (table_id == "result_variation") {
+    if (table_id == "result_variation" && pourcentage == true) {
       td.appendChild(document.createTextNode(parseInt(val) + "%"));
     } else {
       td.appendChild(document.createTextNode(val));
@@ -159,8 +159,12 @@ async function get_data_product_with_biggest_variation(
   start_date2,
   end_date2,
   number,
-  ascending
+  ascending,
+  type,
+  pourcentage
 ) {
+  console.log("type", type);
+  console.log("pourcentage", pourcentage);
   var data = await fetch(
     "/api/product_with_biggest_variation?" +
       "start_date=" +
@@ -174,7 +178,11 @@ async function get_data_product_with_biggest_variation(
       "&number=" +
       number +
       "&ascending=" +
-      ascending
+      ascending +
+      "&type=" +
+      type +
+      "&pourcentage=" +
+      pourcentage
   )
     .then((response) => {
       return response.json();
@@ -192,7 +200,9 @@ async function call_function_product_with_biggest_variation(
   start_date2,
   end_date2,
   number,
-  ascending
+  ascending,
+  type,
+  pourcentage
 ) {
   var data = await get_data_product_with_biggest_variation(
     start_date,
@@ -200,13 +210,16 @@ async function call_function_product_with_biggest_variation(
     start_date2,
     end_date2,
     number,
-    ascending
+    ascending,
+    type,
+    pourcentage
   );
   display_table(
     data,
     "Product Name",
-    "Variation in pourcent",
-    "result_variation"
+    pourcentage == 1 ? "Variation in %" : "Variation in quantity",
+    "result_variation",
+    pourcentage == 1 ? true : false
   );
 }
 
@@ -221,13 +234,19 @@ function create_button_product_with_biggest_variation(div) {
     var end_date2 = document.getElementById("end_date2").value;
     var number = document.getElementById("number_variation").value;
     var ascending = document.getElementById("ascending").value;
+    var type = document.getElementById("type").value;
+    var pourcentage = document.getElementById("pourcentage_or_absolute").value;
+    console.log("pourcentage", pourcentage);
+    console.log("type", type);
     call_function_product_with_biggest_variation(
       start_date,
       end_date,
       start_date2,
       end_date2,
       number,
-      ascending
+      ascending,
+      type,
+      pourcentage
     );
   };
   div.appendChild(button);
@@ -308,7 +327,7 @@ function create_result_table_variation_sidebar() {
 }
 
 // create select for type
-function create_select_ascending_product_with_biggest_variation(div) {
+function create_select_type_product_with_biggest_variation(div) {
   var select = document.createElement("select");
   select.id = "type";
   var option = document.createElement("option");
@@ -322,6 +341,22 @@ function create_select_ascending_product_with_biggest_variation(div) {
   div.appendChild(select);
 }
 
+// select for pourcentage or absolute
+function create_select_pourcentage_or_absolute(div) {
+  var select = document.createElement("select");
+  select.id = "pourcentage_or_absolute";
+  var option = document.createElement("option");
+  option.value = 1;
+  option.text = "Pourcentage";
+  select.appendChild(option);
+  var option = document.createElement("option");
+  option.value = 0;
+  option.text = "Absolute";
+  select.appendChild(option);
+  div.appendChild(select);
+}
+
+
 function create_function_selectors_product_with_biggest_variation() {
   var main = document.getElementById("main");
   var div = document.createElement("div");
@@ -334,37 +369,44 @@ function create_function_selectors_product_with_biggest_variation() {
   create_input_date_product_with_biggest_variation(div, "end_date2");
   create_input_number_product_with_biggest_variation(div);
   create_select_ascending_product_with_biggest_variation(div);
+  create_select_pourcentage_or_absolute(div);
+  create_select_type_product_with_biggest_variation(div);
   create_button_product_with_biggest_variation(div);
+
   main.appendChild(div);
   create_result_table_variation();
 }
 
 create_function_selectors_product_with_biggest_variation();
-// call_function_product_with_biggest_variation(
-//   "2010-01-01",
-//   "2010-12-31",
-//   "2011-01-01",
-//   "2011-12-31",
-//   10,
-//   1
-// );
+call_function_product_with_biggest_variation(
+  "2010-01-01",
+  "2010-12-31",
+  "2011-01-01",
+  "2011-12-31",
+  10,
+  1,
+  "Description",
+  1
+);
 
-function create_function_selectors_product_with_biggest_variation_sidebar() {
-  var main = document.getElementById("sidebar");
-  var div = document.createElement("div");
-  div.className = "function_selectors";
-  main.appendChild(div);
-  create_result_table_variation_sidebar();
+// function create_function_selectors_product_with_biggest_variation_sidebar() {
+//   var main = document.getElementById("sidebar");
+//   var div = document.createElement("div");
+//   div.className = "function_selectors";
+//   main.appendChild(div);
+//   create_result_table_variation_sidebar();
 
-  call_function_product_with_biggest_variation(
-    "2010-01-01",
-    "2010-12-31",
-    "2011-01-01",
-    "2011-12-31",
-    10,
-    1
-  );
-}
+//   call_function_product_with_biggest_variation(
+//     "2010-01-01",
+//     "2010-12-31",
+//     "2011-01-01",
+//     "2011-12-31",
+//     10,
+//     1,
+//     'Description',
+//     1
+//   );
+// }
 
 // create_function_selectors_product_with_biggest_variation_sidebar();
 

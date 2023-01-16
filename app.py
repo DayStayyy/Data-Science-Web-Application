@@ -16,7 +16,7 @@ data_path = 'data.csv'
 
 app = Flask(__name__)
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
@@ -99,7 +99,7 @@ def product_with_biggest_variation():
     end_date2 = request.args.get('end_date2', default='2011-12-09', type=str)
     pourcentage = request.args.get('pourcentage', default=0, type=int)
     pourcentage = bool(pourcentage)
-    type = request.args.get('type', default='product', type=str)
+    type = request.args.get('type', default='Description', type=str)
 
     # Get the best customers
     products = engine.find_product_customer_with_biggest_variation(start_date, end_date, start_date2, end_date2, number=number, ascending=ascending, type=type, pourcentage=pourcentage)
