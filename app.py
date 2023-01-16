@@ -1,5 +1,5 @@
 import json
-from flask import Flask, render_template, redirect, url_for, request, jsonify, session, make_response
+from flask import Flask, render_template, redirect, url_for, request, jsonify, session, make_response,send_file
 import pandas as pd
 from dataEngine import DataEngine
 
@@ -25,8 +25,6 @@ def best_selling_products():
     return json.dumps(products.to_dict())
 
 
-
-
 @app.route('/api/most_returned_products', methods=['GET', 'POST'])
 def most_returned_products():
     # Get the number of products to return
@@ -46,6 +44,7 @@ def best_customers():
     # Return the results as a json object
     return json.dumps(customers.to_dict())
 
+
 @app.route('/api/most_returned_customers', methods=['GET', 'POST'])
 def most_returned_customers():
     # Get the number of customers to return
@@ -54,6 +53,7 @@ def most_returned_customers():
     customers = engine.find_most_returned_customers(number)
     # Return the results as a json object
     return json.dumps(customers.to_dict())
+
 
 @app.route('/api/best_selling_products_by_country', methods=['GET', 'POST'])
 def best_selling_products_by_country():
@@ -64,6 +64,7 @@ def best_selling_products_by_country():
     # Return the results as a json object
     return jsonify(products)
 
+
 @app.route('/api/similar_products_countries', methods=['GET', 'POST'])
 def similar_products_countries():
     # Get the number of customers to return
@@ -73,6 +74,7 @@ def similar_products_countries():
     # Return the results as a json object
     return jsonify(products)
 
+
 # call find_product_with_biggest_variation
 @app.route('/api/product_with_biggest_variation', methods=['GET', 'POST'])
 def product_with_biggest_variation():
@@ -80,9 +82,7 @@ def product_with_biggest_variation():
     number = request.args.get('number', default=10, type=int)
     # other parameters is ascending, start_date, end_date, start_date2, end_date2
     ascending = request.args.get('ascending', default=True, type=int)
-    print(ascending)
     ascending = bool(ascending)
-    print(ascending)
     start_date = request.args.get('start_date', default='2010-12-01', type=str)
     end_date = request.args.get('end_date', default='2011-12-09', type=str)
     start_date2 = request.args.get('start_date2', default='2011-12-01', type=str)
@@ -93,7 +93,64 @@ def product_with_biggest_variation():
     return json.dumps(products)
 
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
+
+# Modelisation
+@app.route('/modelisation/plot_top_product', methods=['GET', 'POST'])
+def plot_top_product():
+    # Get the number of customers to return
+    id = request.args.get('id', default=0, type=int)
+    # The fonction create a image in the folder modelisation, the id is the name of the image
+    engine.plot_top_product( id)
+    filename = 'modelisation/' + str(id) + '.png'
+
+    # Return the image
+    return send_file(filename, mimetype='image/gif')
+
+
+@app.route('/modelisation/plot_customer_purchases_in_period', methods=['GET', 'POST'])
+def plot_customer_purchases_in_period():
+    # Get the number of customers to return
+    id = request.args.get('id', default=0, type=int)
+    # The fonction create a image in the folder modelisation, the id is the name of the image
+    engine.plot_customer_purchases_in_period( id)
+    filename = 'modelisation/' + str(id) + '.png'
+
+    # Return the image
+    return send_file(filename, mimetype='image/gif')
+
+@app.route('/modelisation/plot_top_products_by_country', methods=['GET', 'POST'])
+def plot_top_products_by_country():
+    # Get the number of customers to return
+    id = request.args.get('id', default=0, type=int)
+    # The fonction create a image in the folder modelisation, the id is the name of the image
+    engine.plot_top_products_by_country( id)
+    filename = 'modelisation/' + str(id) + '.png'
+
+    # Return the image
+    return send_file(filename, mimetype='image/gif')
+
+@app.route('/modelisation/plot_top_customers', methods=['GET', 'POST'])
+def plot_top_customers():
+    # Get the number of customers to return
+    id = request.args.get('id', default=0, type=int)
+    # The fonction create a image in the folder modelisation, the id is the name of the image
+    engine.plot_top_customers(id)
+    filename = 'modelisation/' + str(id) + '.png'
+
+    # Return the image
+    return send_file(filename, mimetype='image/gif')
+
+@app.route('/modelisation/plot_top_returned_products', methods=['GET', 'POST'])
+def plot_top_returned_products():
+    # Get the number of customers to return
+    id = request.args.get('id', default=0, type=int)
+    # The fonction create a image in the folder modelisation, the id is the name of the image
+    engine.plot_top_returned_products( id)
+    filename = 'modelisation/' + str(id) + '.png'
+
+    # Return the image
+    return send_file(filename, mimetype='image/gif')

@@ -103,19 +103,87 @@ class DataEngine(object):
 
     # ============= Modelisation ================ #
 
-    def plot_top_returned_products(self):
-        # Only get rows where quantity is less than zero
-        self.df = self.df[self.df['Quantity'] < 0]
-        # Group by product and sum the quantity
+    def plot_top_product(self, id):
+        # Group the data by product and sum the quantity
         products = self.df.groupby('Description').sum(numeric_only=False)['Quantity']
+        # Sort the products by quantity
+        products = products.sort_values(ascending=False)
+        # Plot the top 10 products
+        products.iloc[:10].plot(kind='bar')
+        plt.xlabel('Product')
+        plt.ylabel('Quantity Sold')
+        plt.title('Top 10 Selling Products')
+        plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
+        
+    def plot_top_returned_products(self, id):
+        # Only get rows where quantity is less than zero
+        dataframe_products = self.df[self.df['Quantity'] < 0]
+        # Group by product and sum the quantity
+        products = dataframe_products.groupby('Description')['Quantity'].sum(numeric_only=False)
         # Sort products by quantity, but since it's negative we sort in ascending order
         products = products.sort_values(ascending=True)
         # Plot the top 10 returned products
-        ax = products[:10].plot(kind='bar')
+        ax = products.iloc[:10].plot(kind='bar')
         ax.invert_yaxis()
         plt.xlabel('Quantity Returned')
         plt.ylabel('Product')
         plt.title('Top 10 Returned Products')
-        return plt
+        plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
     
-    
+    def plot_top_customers(self, id):
+        # Group the data by customer and sum the Quantity
+        customers = self.df.groupby('CustomerID')['Quantity'].sum(numeric_only=False)
+        # Sort the customers by quantity
+        customers = customers.sort_values(ascending=False)
+        # Plot the top 10 customers
+        customers.head(10).plot(kind='bar')
+        plt.xlabel('Customer ID')
+        plt.ylabel('Quantity Purchased')
+        plt.title('Top 10 Customers by Quantity Purchased')
+        plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
+
+    def plot_top_products_by_country(self, id, country=None):
+        # Only get rows where quantity is greater than zero (to ignore returns)
+        df = self.df[self.df['Quantity'] > 0]
+        countries = df['Country'].unique()
+        if country:
+            if country not in countries:
+                print(f"Country '{country}' not found in data.")
+                return
+            countries = [country]
+        for country in countries:
+            # Filter data to include only rows for current country
+            df_country = df[df['Country'] == country]
+            # Group by product and sum the quantity
+            products = df_country.groupby('Description')['Quantity'].sum(numeric_only=False)
+            # Sort products by quantity
+            products = products.sort_values(ascending=False)
+            # Plot the top 10 products
+            products.iloc[:10][:10].plot(kind='bar')
+            plt.xlabel('Product')
+            plt.ylabel('Quantity Sold')
+            plt.title('Top 10 Sold Products in {}'.format(country))
+            plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
+
+    def plot_customer_purchases_in_period(self, customer_id, start_date, end_date, id, product_name=None):
+        # Filter dataframe by customer ID
+        df = self.df[self.df['CustomerID'] == customer_id]
+        # Filter dataframe by date
+        df = df[(df['InvoiceDate'] >= start_date) & (df['InvoiceDate'] <= end_date)]
+        # Filter dataframe by product name
+        if product_name:
+            df = df[df['Description'] == product_name]
+        # Create a column with the month of the purchase
+        df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
+        df['month'] = df['InvoiceDate'].dt.to_period('M')
+        # Group by month and sum the Quantity
+        purchases = df.groupby('month')['Quantity'].sum()
+        # Plot purchases by month
+        if product_name:
+            title = 'Purchases of {} by Month'.format(product_name)
+        else:
+            title = 'Total Purchases by Month'
+        purchases.plot(kind='bar', title=title)
+        plt.xlabel('Month')
+        plt.ylabel('Quantity Purchased')
+        plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')

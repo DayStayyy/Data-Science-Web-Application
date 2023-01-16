@@ -7,6 +7,14 @@ var array_of_functions_name = [
   "similar_products_countries",
 ];
 
+var array_of_functions_name_modelisation = [
+  "plot_top_product",
+  "plot_customer_purchases_in_period",
+  "plot_top_products_by_country",
+  "plot_top_customers",
+  "plot_top_returned_products"
+];
+
 async function get_data(number, function_name) {
   var data = await fetch("/api/" + function_name + "?" + "number=" + number)
     .then((response) => {
@@ -314,7 +322,16 @@ function create_function_selectors_product_with_biggest_variation() {
   create_result_table_variation();
 }
 
+
 create_function_selectors_product_with_biggest_variation();
+call_function_product_with_biggest_variation(
+  "2010-01-01",
+  "2010-12-31",
+  "2011-01-01",
+  "2011-12-31",
+  10,
+  1
+);
 
 function create_function_selectors_product_with_biggest_variation_sidebar() {
   var main = document.getElementById("sidebar");
@@ -334,3 +351,50 @@ function create_function_selectors_product_with_biggest_variation_sidebar() {
 }
 
 // create_function_selectors_product_with_biggest_variation_sidebar();
+
+function display_modelisation(id, function_name) {
+  if(document.getElementById("modelisation_image") != null) {
+    document.getElementById("modelisation_image").remove();
+  }
+  var div = document.getElementById("main");
+  var img = document.createElement("img");
+  img.id = "modelisation_image";
+  // url is modelisation/function_name?id=id
+  img.src = "http://localhost:5000/modelisation/" + function_name + "?id=" + id;
+  div.appendChild(img);
+}
+
+function create_select_function_name() {
+  var select = document.createElement("select");
+  select.id = "function_name_modelisation";
+  for (var i = 0; i < array_of_functions_name_modelisation.length; i++) {
+    var option = document.createElement("option");
+    option.value = array_of_functions_name_modelisation[i];
+    option.text = array_of_functions_name_modelisation[i];
+    select.appendChild(option);
+  }
+  div = document.getElementById("main");
+  div.appendChild(select);
+}
+
+create_select_function_name(document.getElementById("sidebar"));
+
+// button call function
+function create_button_modelisation() {
+  var button = document.createElement("button");
+  button.innerHTML = "Call function";
+  button.onclick = function () {
+    // generate id
+    var id = Math.floor(Math.random() * 1000000000);
+   
+    var function_name = document.getElementById("function_name_modelisation")
+      .value;
+    display_modelisation(id, function_name);
+  };
+  div = document.getElementById("main");
+  div.appendChild(button);
+}
+
+create_button_modelisation();
+
+display_modelisation(1, "plot_top_customers");
