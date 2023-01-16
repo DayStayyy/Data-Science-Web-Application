@@ -10,6 +10,7 @@ var array_of_functions_name_modelisation = [
   "plot_top_products_by_country",
   "plot_top_customers",
   "plot_top_returned_products",
+  "plot_top_returned_customers"
 ];
 
 async function get_data(number, function_name) {
