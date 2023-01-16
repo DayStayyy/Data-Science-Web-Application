@@ -119,6 +119,17 @@ def plot_top_product():
     # Return the image
     return send_file(filename, mimetype='image/gif')
 
+@app.route('/modelisation/plot_top_returned_customers', methods=['GET', 'POST'])
+def plot_top_returned_customers():
+    # Get the number of customers to return
+    id = request.args.get('id', default=0, type=int)
+    # The fonction create a image in the folder modelisation, the id is the name of the image
+    engine.plot_top_returned_customers(id)
+    filename = 'modelisation/' + str(id) + '.png'
+
+    # Return the image
+    return send_file(filename, mimetype='image/gif')
+
 
 @app.route('/modelisation/plot_customer_purchases_in_period', methods=['GET', 'POST'])
 def plot_customer_purchases_in_period():

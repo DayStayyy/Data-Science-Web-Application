@@ -162,6 +162,19 @@ class DataEngine(object):
         plt.ylabel('Quantity Sold')
         plt.title('Top 10 Selling Products')
         plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
+
+    def plot_top_returned_customers(self, id):
+        # Group by customer and sum the Quantity
+        products = self.df.groupby('CustomerID')['Quantity'].sum(numeric_only=False)
+        # Sort customer by quantity, but since it's negative we sort in ascending order
+        products = products.sort_values(ascending=True)
+        # Plot the top 10 returned customers
+        ax = products.iloc[:10].plot(kind='bar')
+        ax.invert_yaxis()
+        plt.ylabel('Quantity Returned')
+        plt.xlabel('Customers')
+        plt.title('Top 10 Returned Customers')
+        plt.savefig(f'modelisation/{id}.png', bbox_inches='tight')
         
     def plot_top_returned_products(self, id):
         # Only get rows where quantity is less than zero
