@@ -3,19 +3,17 @@ var array_of_functions_name = [
   "most_returned_products",
   "best_customers",
   "most_returned_customers",
-  "best_selling_categories",
-  "similar_products_countries",
 ];
 
 var array_of_functions_name_modelisation = [
   "plot_top_product",
-  "plot_customer_purchases_in_period",
   "plot_top_products_by_country",
   "plot_top_customers",
-  "plot_top_returned_products"
+  "plot_top_returned_products",
 ];
 
 async function get_data(number, function_name) {
+  console.log("get_data" + number, " ", function_name);
   var data = await fetch("/api/" + function_name + "?" + "number=" + number)
     .then((response) => {
       return response.json();
@@ -107,6 +105,7 @@ function create_input_number(div) {
   var input = document.createElement("input");
   input.type = "text";
   input.id = "number";
+  input.value = 10;
   input.placeholder = "number of results";
   div.appendChild(input);
 }
@@ -239,6 +238,7 @@ function create_input_number_product_with_biggest_variation(div) {
   var input = document.createElement("input");
   input.type = "text";
   input.id = "number_variation";
+  input.value = 10;
   input.placeholder = "number of results";
   div.appendChild(input);
 }
@@ -311,6 +311,8 @@ function create_function_selectors_product_with_biggest_variation() {
   var main = document.getElementById("main");
   var div = document.createElement("div");
   div.className = "function_selectors";
+  text = document.createTextNode("Product with biggest variation");
+  div.appendChild(text);
   create_input_date_product_with_biggest_variation(div, "start_date");
   create_input_date_product_with_biggest_variation(div, "end_date");
   create_input_date_product_with_biggest_variation(div, "start_date2");
@@ -322,16 +324,15 @@ function create_function_selectors_product_with_biggest_variation() {
   create_result_table_variation();
 }
 
-
 create_function_selectors_product_with_biggest_variation();
-call_function_product_with_biggest_variation(
-  "2010-01-01",
-  "2010-12-31",
-  "2011-01-01",
-  "2011-12-31",
-  10,
-  1
-);
+// call_function_product_with_biggest_variation(
+//   "2010-01-01",
+//   "2010-12-31",
+//   "2011-01-01",
+//   "2011-12-31",
+//   10,
+//   1
+// );
 
 function create_function_selectors_product_with_biggest_variation_sidebar() {
   var main = document.getElementById("sidebar");
@@ -353,7 +354,7 @@ function create_function_selectors_product_with_biggest_variation_sidebar() {
 // create_function_selectors_product_with_biggest_variation_sidebar();
 
 function display_modelisation(id, function_name) {
-  if(document.getElementById("modelisation_image") != null) {
+  if (document.getElementById("modelisation_image") != null) {
     document.getElementById("modelisation_image").remove();
   }
   var div = document.getElementById("main");
@@ -364,7 +365,7 @@ function display_modelisation(id, function_name) {
   div.appendChild(img);
 }
 
-function create_select_function_name() {
+function create_select_function_name_modelisation() {
   var select = document.createElement("select");
   select.id = "function_name_modelisation";
   for (var i = 0; i < array_of_functions_name_modelisation.length; i++) {
@@ -377,7 +378,7 @@ function create_select_function_name() {
   div.appendChild(select);
 }
 
-create_select_function_name(document.getElementById("sidebar"));
+create_select_function_name_modelisation(document.getElementById("sidebar"));
 
 // button call function
 function create_button_modelisation() {
@@ -386,9 +387,10 @@ function create_button_modelisation() {
   button.onclick = function () {
     // generate id
     var id = Math.floor(Math.random() * 1000000000);
-   
-    var function_name = document.getElementById("function_name_modelisation")
-      .value;
+
+    var function_name = document.getElementById(
+      "function_name_modelisation"
+    ).value;
     display_modelisation(id, function_name);
   };
   div = document.getElementById("main");
@@ -397,4 +399,4 @@ function create_button_modelisation() {
 
 create_button_modelisation();
 
-display_modelisation(1, "plot_top_customers");
+// display_modelisation(10, "plot_top_customers");

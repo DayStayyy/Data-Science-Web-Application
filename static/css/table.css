@@ -124,10 +124,10 @@ h2{
 }
 
 
-.function_selectors {
+/* .function_selectors {
   display: flex;
   width: 30%;
   justify-content: space-between;
   align-items: center;
   margin-left: 30%
-}
+} */
