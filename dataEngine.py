@@ -66,7 +66,7 @@ class DataEngine(object):
                 similar_countries[country] = common_products
         return similar_countries
 
-    def find_product_with_biggest_variation(self, start_date, end_date, start_date2, end_date2, number = 10, ascending = False):
+    def find_product_with_biggest_variation(self, start_date, end_date, start_date2, end_date2, number = 10, ascending = False, type='Description'):
             start_date = pd.to_datetime(start_date)
             end_date = pd.to_datetime(end_date)
             start_date2 = pd.to_datetime(start_date2)
