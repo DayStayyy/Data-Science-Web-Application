@@ -1,4 +1,4 @@
-# Projet : Application Web orientée Data Science pour E-commerce
+# Projet : Application Web orientée Data Science pour un site de E-commerce
 
 ## Description du Projet
 
