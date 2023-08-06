@@ -1,22 +1,24 @@
-# PRESENTATION DU PROJET
+# Projet : Application Web orientée Data Science pour E-commerce
 
-Ce projet est un projet de test pour de Math Data Science.
+## Description du Projet
 
-## Objectif 
+Ce projet vise à donner une plus-value aux données fournies par un site de E-commerce sur plusieurs années. L'objectif est de créer une application web qui permettra à l'équipe du site d'accéder en temps réel à leurs données, de suivre leur évolution et de personnaliser leurs recherches à travers les données.
 
-Ce projet a pour objectif de réaliser un site web qui permet de visualiser des données du csv fourni par le client.
-La présentation du projet se trouve dans le "fil_rouge.pdf".
+## Composition du Projet
 
-## Description du projet
+Le projet est organisé en différents fichiers et dossiers :
 
-Le projet est composé de différents fichiers et dossiers.
+- **Notebooks :** Ce dossier contient les notebooks utilisés pour la réalisation du projet.
+- **Modelisation :** Ce dossier contient les images de modélisation générées par l'API.
+- **Static et Templates :** Ces dossiers contiennent les fichiers HTML, CSS et JS utilisés pour le site web.
+- **app.py :** Il s'agit du fichier principal de l'application web.
+- **requirements.txt :** Ce fichier liste les librairies utilisées pour le projet.
+- **Data:** Ce dossier contient fichiers csv contenant les données.
 
-- Le dossier "Notebooks" contient les notebooks utilisés pour le projet.
-- Le dossier "modelisation" contient les image de modélisation réalisées par l'Api.
-- Les dossier "static" et "templates" contiennent les fichiers html, css et js utilisés pour le site web.
-- Le fichier "app.py" est le fichier principal du site web.
-- Le fichier "requirements.txt" contient les librairies utilisées pour le projet.
-- Les fichier .csv sont les fichiers de données utilisés pour le projet.
+## Remarque
+
+Veuillez noter que les données fournies par le site de E-commerce contenues dans les fichiers .csv utilisés dans les notebooks et l'application web sont des données de démonstration ou synthétiques.
+
 
 ## Lancement du projet
 
